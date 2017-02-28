@@ -1,0 +1,26 @@
+varnishtest "Test time2date vmod"
+
+server s1 {
+        rxreq
+        expect req.http.Time == "2017:01:31:23:59:59"
+        txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import ${vmod_dateformat};
+
+        sub vcl_recv {
+                if (dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now) >= now) {
+                        return (synth(400, "Foo check"));
+                }
+                else if (dateformat.date2time("%Y:%m:%d:%T", req.http.foo_time, now) + 20y < now) {
+                        return (synth(400, "Bar check"));
+                }
+        }
+} -start
+
+client c1 {
+	txreq -hdr "Time: 2017:01:31:23:59:59"
+	rxresp
+        expect resp.status == 200
+} -run
