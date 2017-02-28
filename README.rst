@@ -10,28 +10,46 @@ import dateformat;
 DESCRIPTION
 ===========
 
-Dateformat Varnish vmod demonstrating how to write an out-of-tree Varnish vmod.
+Dateformat Varnish vmod convert date into time accordingly to format.
 
-Implements the traditional Hello World as a vmod.
+It extends basic capability of varnish std module by specifing a date format.
 
 FUNCTIONS
 =========
 
-hello
+date2time
 -----
 
 Prototype
         ::
 
-                hello(STRING S)
+                date2time(STRING format, STRING str, TIME fallback)
+Return value
+	TIME
+Description
+	Convert a STRING str into a TIME accordingly to date format (see strftime.3)
+	Returns a TIME fallback if conversion failed.
+        ::
+                if (dateformat.date2time("%Y:%m:%d:%T", req.http.CustomDate, now) >= now) {
+                        return (synth(400, "Invalid date"));
+                }
+
+
+
+time2date
+-----
+
+Prototype
+        ::
+
+                time2date(STRING format, TIME t)
 Return value
 	STRING
 Description
-	Returns "Hello, " prepended to S
-Dateformat
+	Convert a TIME t into a STRING accordingly to date format (see strftime.3)
+	Returns an empty string if conversion failed.
         ::
-
-                set resp.http.hello = dateformat.hello("World");
+                set resp.http.foodate = dateformat.time2date("%a, %d %b %Y %T GMT", now + 8h);
 
 INSTALLATION
 ============
@@ -82,17 +100,6 @@ By default, the vmod ``configure`` script installs the built vmod in the
 directory relevant to the prefix. The vmod installation directory can be
 overridden by passing the ``vmoddir`` variable to ``make install``.
 
-USAGE
-=====
-
-In your VCL you could then use this vmod along the following lines::
-
-        import dateformat;
-
-        sub vcl_deliver {
-                # This sets resp.http.hello to "Hello, World"
-                set resp.http.hello = dateformat.hello("World");
-        }
 
 COMMON PROBLEMS
 ===============
