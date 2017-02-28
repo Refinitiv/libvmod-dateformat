@@ -1,4 +1,4 @@
-varnishtest "Test time2date vmod"
+varnishtest "Test date2time function"
 
 server s1 {
         rxreq

@@ -1,14 +1,13 @@
-AC_PREREQ([2.68])
+AC_PREREQ([2.63])
 AC_INIT([libvmod-dateformat], [0.1], [], [vmod-dateformat])
-AC_COPYRIGHT([Copyright (c) 2011-2016 Varnish Software AS])
+AC_COPYRIGHT([Copyright (c) 2017 Thomson Reuters])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR(src/vmod_dateformat.vcc)
 AC_CONFIG_HEADER([config.h])
 
-AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
+AM_INIT_AUTOMAKE([1.11 -Wall -Werror foreign parallel-tests])
 AM_SILENT_RULES([yes])
-AM_PROG_AR
 
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
@@ -28,7 +27,7 @@ AC_ARG_WITH([rst2man],
 
 m4_ifndef([VARNISH_PREREQ], AC_MSG_ERROR([Need varnish.m4 -- see README.rst]))
 
-VARNISH_PREREQ([5.0], [5.1])
+VARNISH_PREREQ([4.1], [trunk])
 VARNISH_VMODS([dateformat])
 
 VMOD_TESTS="$(cd $srcdir/src && echo tests/*.vtc)"

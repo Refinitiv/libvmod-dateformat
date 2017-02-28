@@ -1,4 +1,4 @@
-varnishtest "Test dateformat vmod"
+varnishtest "Test time2date function"
 
 server s1 {
        rxreq
@@ -6,31 +6,15 @@ server s1 {
 } -start
 
 varnish v1 -vcl+backend {
-	import std;
 	import ${vmod_dateformat};
 
-	sub vcl_init {
-		std.log(dateformat.info());
-	}
-
 	sub vcl_deliver {
-		set resp.http.hello = dateformat.hello("World");
-		set resp.http.info = dateformat.info();
+		set resp.http.set-cookie = "Foo=Bar; Expires=" + dateformat.time2date("%a, %d %b %Y %T GMT", now + 8h);
 	}
-} -start
-
-logexpect l1 -v v1 -g raw -d 1 {
-	expect 0 0    CLI     {^Rd vcl.load}
-	expect 0 =    VCL_Log {^vmod_dateformat loaded at }
 } -start
 
 client c1 {
 	txreq -url "/"
 	rxresp
-	expect resp.http.hello == "Hello, World"
-	expect resp.http.info  ~  "^vmod_dateformat warmed at "
-}
-
-client c1 -run
-
-logexpect l1 -wait
+	expect resp.http.set-cookie ~ "Foo=Bar; Expires=.* 20[0-9][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9] GMT"
+} -run

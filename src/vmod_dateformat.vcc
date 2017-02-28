@@ -1,7 +1,28 @@
 #
-# Copyright YOU (c) 1900.
+# Copyright 2017 Thomson Reuters
 #
-# (vmodtool requires this format.)
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 $Module dateformat 3 Dateformat VMOD
@@ -9,24 +30,12 @@ $Module dateformat 3 Dateformat VMOD
 DESCRIPTION
 ===========
 
-This is the embedded documentation for the dateformat VMOD. It should
-mention what the vmod is intended to do.
+$Function STRING time2date(STRING format, TIME t)
 
-It can span multiple lines and is written in RST format.
-You can even have links and lists in here:
+Convert a TIME t into a STRING accordingly to date format (see strftime.3)
+Returns an empty string if conversion failed.
 
-* https://github.com/varnish/libvmod-dateformat/
-* https://www.varnish-cache.org/
+$Function TIME date2time(STRING format, STRING str, TIME fallback)
 
-The init-function declared next does not have documentation.
-
-$Event event_function
-$Function STRING info()
-
-Returns a string set by the last VCL event, demonstrating the use of
-event functions.
-
-$Function STRING hello(STRING)
-
-The different functions provided by the VMOD should also have their own
-embedded documentation. This section is for the hello() function.
+Convert a STRING str into a TIME accordingly to date format (see strftime.3)
+Returns a TIME fallback if conversion failed.
