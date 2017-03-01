@@ -1,0 +1,38 @@
+varnishtest "Test date2time function"
+
+server s1 {
+        rxreq
+        expect req.http.Time1 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        expect req.http.Time2 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        expect req.http.Time3 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        expect req.http.Time4 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        expect req.http.Time5 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        expect req.http.Time6 == "Sun, 01 Jan 2017 12:59:59 GMT"
+        txresp
+} -start
+
+varnish v1 -cliok "param.set vcc_allow_inline_c true" -vcl+backend {
+	import ${vmod_dateformat};
+        C{ #include <stdlib.h> }C
+        sub vcl_recv {
+                C{ setenv("TZ", "UTC", 1); }C
+                set req.http.Time1 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+                set req.http.Time2 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+
+                C{ setenv("TZ", "CET", 1); }C
+                set req.http.Time3 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+                set req.http.Time4 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+
+                C{ setenv("TZ", "UTC", 1); }C
+                set req.http.Time5 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+                set req.http.Time6 = dateformat.date2time("%Y:%m:%d:%T", req.http.Time, now);
+        }
+} -start
+
+client c1 {
+        timeout 5
+
+	txreq -hdr "Time: 2017:01:01:12:59:59"
+	rxresp
+        expect resp.status == 200
+} -run
