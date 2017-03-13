@@ -8,6 +8,7 @@ AC_CONFIG_HEADER([config.h])
 
 AM_INIT_AUTOMAKE([1.11 -Wall -Werror foreign parallel-tests])
 AM_SILENT_RULES([yes])
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
@@ -27,7 +28,7 @@ AC_ARG_WITH([rst2man],
 
 m4_ifndef([VARNISH_PREREQ], AC_MSG_ERROR([Need varnish.m4 -- see README.rst]))
 
-VARNISH_PREREQ([4.1], [trunk])
+VARNISH_PREREQ([4.1], [5.0.0])
 VARNISH_VMODS([dateformat])
 
 VMOD_TESTS="$(cd $srcdir/src && echo tests/*.vtc)"
