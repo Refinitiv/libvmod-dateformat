@@ -104,9 +104,6 @@ overridden by passing the ``vmoddir`` variable to ``make install``.
 COMMON PROBLEMS
 ===============
 
-* Some issues with TZ when VMOD is used with a LOCALE.
-  See varnish VTIM doc for details https://github.com/varnishcache/varnish-cache/blob/master/lib/libvarnish/vtim.c#L43-L51
-
 * configure: error: Need varnish.m4 -- see README.rst
 
   Check whether ``PKG_CONFIG_PATH`` and ``ACLOCAL_PATH`` were set correctly

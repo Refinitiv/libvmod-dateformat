@@ -38,6 +38,50 @@
 #include "vtim.h"
 #include "vcc_dateformat_if.h"
 
+static const int days_before_month[] = {
+	0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+};
+
+/* largely inspired by Varnish lib vtim.c */
+double
+utc_mktime(const struct tm *tm)
+{
+	double t;
+	int month = 0, year = 0, mday = 0;
+	int hour = 0, min = 0, sec = 0;
+	int d, leap;
+
+	month = tm->tm_mon + 1;
+	year = tm->tm_year + 1900;
+	mday = tm->tm_mday;
+	hour = tm->tm_hour;
+	min = tm->tm_min;
+	sec = tm->tm_sec;
+	leap =
+	    ((year) % 4) == 0 && (((year) % 100) != 0 || ((year) % 400) == 0);
+	t = ((hour * 60.) + min) * 60. + sec;
+	d = (mday - 1) + days_before_month[month - 1];
+
+	if (month > 2 && leap)
+		d++;
+
+	d += (year % 100) * 365;	/* There are 365 days in a year */
+
+	if ((year % 100) > 0)		/* And a leap day every four years */
+		d += (((year % 100) - 1) / 4);
+
+	d += ((year / 100) - 20) *	/* Days relative to y2000 */
+	    (100 * 365 + 24);		/* 24 leapdays per year in a century */
+
+	d += ((year - 1) / 400) - 4;	/* And one more every 400 years */
+
+	t += d * 86400.;
+
+	t += 10957. * 86400.;		/* 10957 days frm UNIX epoch to y2000 */
+
+	return (t);
+}
+
 VCL_STRING __match_proto__(td_dateformat_time2date)
 vmod_time2date(VRT_CTX, VCL_STRING format, VCL_TIME time)
 {
@@ -85,7 +129,7 @@ vmod_date2time(VRT_CTX, VCL_STRING format, VCL_STRING str, VCL_TIME fallback)
 		VSLb(ctx->vsl, SLT_Error, "strptime failed: <%s> is not in <%s> format", str, format);
 		return fallback;
 	}
-	time = mktime(&tm);
+	time = utc_mktime(&tm);
 	if (time == -1) {
 		VSLb(ctx->vsl, SLT_Error, "mktime failed: <%s> is not in <%s> format", str, format);
 		return fallback;
