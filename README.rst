@@ -1,7 +1,9 @@
+.. image:: https://travis-ci.org/thomsonreuters/libvmod-dateformat.svg?branch=master
+    :target: https://travis-ci.org/thomsonreuters/libvmod-dateformat
 ============
 vmod-dateformat
 ============
-
+ 
 SYNOPSIS
 ========
 
