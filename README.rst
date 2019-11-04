@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/thomsonreuters/libvmod-dateformat.svg?branch=master
-    :target: https://travis-ci.org/thomsonreuters/libvmod-dateformat
+.. image:: https://travis-ci.org/Refinitiv/libvmod-dateformat.svg?branch=master
+    :target: https://travis-ci.org/Refinitiv/libvmod-dateformat
 ============
 vmod-dateformat
 ============
@@ -116,3 +116,9 @@ COMMON PROBLEMS
   Make sure you build this vmod against its correspondent Varnish Cache version.
   For instance, to build against Varnish Cache 4.1, this vmod must be built from
   branch 4.1.
+
+COPYRIGHT
+=========
+This document is licensed under BSD-2-Clause license. See LICENSE for details.
+
+The code was opened by (c) Refinitiv (previously Thomson Reuters).
